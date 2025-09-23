@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Добавить транзакцию</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        form { max-width: 500px; }
+        input, select, textarea { width: 100%; padding: 8px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>Добавить транзакцию</h1>
+    <a href="{% url 'transaction_list' %}">← Назад к списку</a>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Сохранить</button>
+    </form>
+</body>
+</html>

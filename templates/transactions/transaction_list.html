@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Все транзакции</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .transaction { padding: 10px; border-bottom: 1px solid #eee; }
+        .income { color: green; }
+        .expense { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Все транзакции</h1>
+    <a href="{% url 'index' %}">На главную</a>
+    <a href="{% url 'transaction_add' %}">Добавить</a>
+    
+    {% for transaction in transactions %}
+    <div class="transaction">
+        <span class="{{ transaction.type }}">
+            {{ transaction.date|date:"d.m.Y"}} - 
+            {{ transaction.amount }} руб. - 
+            {{ transaction.get_type_display }} - 
+            {{ transaction.category.name|default:"Без категории" }}
+        </span>
+    </div>
+    {% empty %}
+    <p>Транзакций пока нет.</p>
+    {% endfor %}
+</body>
+</html>
