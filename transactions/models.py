@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from decimal import Decimal
+from django.utils import timezone
 
 class Category(models.Model):
     CATEGORY_TYPES = [
@@ -67,7 +68,10 @@ class Transaction(models.Model):
         verbose_name='Категория'
     )
     description = models.TextField(max_length=500, blank=True, verbose_name='Описание')
-    date = models.DateTimeField(verbose_name='Дата операции')
+    date = models.DateTimeField(
+        verbose_name='Дата операции',
+        default=timezone.now
+        )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, CreateView
 from .models import Transaction
+from .forms import TransactionForm
 
 class TransactionListView(ListView):
     model = Transaction
@@ -12,8 +13,8 @@ class TransactionListView(ListView):
 
 class TransactionCreateView(CreateView):
     model = Transaction
+    form_class = TransactionForm
     template_name = 'transactions/transaction_form.html'
-    fields = ['amount', 'type', 'category', 'description', 'date']
     
     def form_valid(self, form):
         # Should be real user binding in production
