@@ -5,7 +5,12 @@
     <style>
         body { font-family: Arial; margin: 40px; }
         form { max-width: 500px; }
-        input, select, textarea { width: 100%; padding: 8px; margin: 5px 0; }
+        input, select, textarea { 
+            width: 100%; 
+            padding: 8px; 
+            margin: 5px 0; 
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -14,7 +19,33 @@
     
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        
+        <p>
+            <label for="id_amount">Сумма:</label>
+            {{ form.amount }}
+        </p>
+        
+        <p>
+            <label for="id_type">Тип:</label>
+            {{ form.type }}
+        </p>
+        
+        <p>
+            <label for="id_category">Категория:</label>
+            {{ form.category }}
+        </p>
+        
+        <p>
+            <label for="id_date">Дата:</label>
+            {{ form.date }}
+            <small>Нажмите для выбора даты из календаря</small>
+        </p>
+        
+        <p>
+            <label for="id_description">Описание:</label>
+            {{ form.description }}
+        </p>
+        
         <button type="submit">Сохранить</button>
     </form>
 </body>
