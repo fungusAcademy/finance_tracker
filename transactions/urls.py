@@ -7,4 +7,5 @@ urlpatterns = [
     path('transactions/add/', views.TransactionCreateView.as_view(), name='transaction_add'),
     path('budget/add/', views.BudgetCreateView.as_view(), name='budget_add'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('register/', views.register, name='register'),
 ]

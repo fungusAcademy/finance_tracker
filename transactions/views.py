@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -6,11 +6,25 @@ from django.db.models import Sum, Count
 from django.utils import timezone
 from datetime import timedelta
 from django.http import JsonResponse
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 from .models import Transaction, Budget
 from .forms import TransactionForm, BudgetForm
 import json
 
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # Auto login after registration
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+    
+    return render(request, 'registration/register.html', {'form': form})
 
 class TransactionListView(ListView):
     model = Transaction
@@ -18,8 +32,7 @@ class TransactionListView(ListView):
     context_object_name = 'transactions'
     
     def get_queryset(self):
-        # ADD: show transactions only for specific user
-        return Transaction.objects.all().order_by('-date')[:50]  # last 50 transactions
+       return Transaction.objects.filter(user=self.request.user).order_by('-date')
 
 class TransactionCreateView(LoginRequiredMixin, CreateView):
     model = Transaction
@@ -49,6 +62,9 @@ class BudgetCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 def dashboard(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
     income_total = Transaction.objects.filter(
         type='income', 
         user=request.user
