@@ -31,7 +31,8 @@ ALLOWED_HOSTS = []
 # authentication settings
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+# Currently using custom logout
+# LOGOUT_REDIRECT_URL = '/'
 
 # Application definition
 

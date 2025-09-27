@@ -5,13 +5,17 @@ from django.contrib import messages
 from django.db.models import Sum, Count
 from django.utils import timezone
 from datetime import timedelta
-from django.http import JsonResponse
+# from django.http import JsonResponse
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 
 from .models import Transaction, Budget
 from .forms import TransactionForm, BudgetForm
 import json
+
+def custom_logout(request):
+    logout(request)
+    return redirect('index')
 
 def register(request):
     if request.method == 'POST':

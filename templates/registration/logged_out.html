@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="logout-container">
+    <div class="logout-message">
+        <h2>👋 Вы вышли из системы</h2>
+        <p>Спасибо за использование Finance Tracker!</p>
+        
+        <div class="auth-options">
+            <a href="{% url 'login' %}" class="btn btn-primary">🔐 Войти снова</a>
+            <a href="{% url 'register' %}" class="btn btn-secondary">📝 Зарегистрироваться</a>
+            <a href="{% url 'index' %}" class="btn btn-outline">🏠 На главную</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.logout-container {
+    max-width: 500px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+.logout-message {
+    background: #f8f9fa;
+    padding: 40px;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.auth-options {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    min-width: 200px;
+    text-align: center;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    transition: all 0.3s;
+}
+</style>
+{% endblock %}
