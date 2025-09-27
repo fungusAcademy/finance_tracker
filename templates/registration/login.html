@@ -17,7 +17,7 @@
         </div>
         {% endfor %}
         
-        <button type="submit" class="btn-primary">Войти</button>
+        <button type="submit" class="btn btn-primary">Войти</button>
     </form>
     
     <p style="margin-top: 20px;">
@@ -25,44 +25,4 @@
         <a href="{% url 'register' %}">Зарегистрироваться</a>
     </p>
 </div>
-
-<style>
-.login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-}
-
-.login-form {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.btn-primary {
-    background: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-</style>
 {% endblock %}

@@ -1,23 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Finance Tracker</title>
-    <style>
-        .navbar {
-            background: #343a40;
-            padding: 1rem;
-            margin-bottom: 2rem;
-        }
-        .navbar a {
-            color: white;
-            margin-right: 1rem;
-            text-decoration: none;
-        }
-        .user-info {
-            color: #ccc;
-            float: right;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Finance Tracker{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <div class="navbar">
