@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +26,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-7+l-f*t_rdwz(q8np5%fn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'TRUE') == True
 
-ALLOWED_HOSTS = []
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    # production
+    ALLOWED_HOSTS = [RENDER_EXTERNAL_HOSTNAME, 'localhost', '127.0.0.1']
+else:
+    # local
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
 
 # authentication settings
 LOGIN_URL = '/login/'
@@ -88,6 +93,13 @@ DATABASES = {
     }
 }
 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    import dj_database_url
+    db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+    DATABASES['default'].update(db_from_env)
+
+
 # if 'DATABASE_URL' in os.environ:
 #     DATABASES = {
 #         'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
@@ -116,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Asia/Vladivostok'
 
@@ -131,10 +143,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Create staticfiles if not exists
-if not os.path.exists(STATIC_ROOT):
-    os.makedirs(STATIC_ROOT)
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -143,10 +152,47 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # PRODUCTION
 if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    if DATABASE_URL:
-        import dj_database_url
-        db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
-        DATABASES['default'].update(db_from_env)
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # Ensure the secret key is set in production
+    if not SECRET_KEY or SECRET_KEY.startswith('django-insecure-'):
+        raise ValueError("SECRET_KEY must be set in production environment!")
 
+    # HTTPS settings
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+else:
+    # Development-specific settings
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
+
+# Auto-create staticfiles directory if it doesn't exist
+if not os.path.exists(STATIC_ROOT):
+    os.makedirs(STATIC_ROOT)
