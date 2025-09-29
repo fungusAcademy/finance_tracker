@@ -22,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7+l-f*t_rdwz(q8np5%fn9a3#)oivwlyv*3&a+emnskpb+hlsu'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-7+l-f*t_rdwz(q8np5%fn9a3#)oivwlyv*3&a+emnskpb+hlsu')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'TRUE') == True
 
 ALLOWED_HOSTS = []
 
@@ -88,10 +88,10 @@ DATABASES = {
     }
 }
 
-if 'DATABASE_URL' in os.environ:
-    DATABASES = {
-        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-    }
+# if 'DATABASE_URL' in os.environ:
+#     DATABASES = {
+#         'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+#     }
 
 
 # Password validation
@@ -132,6 +132,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Create staticfiles if not exists
+if not os.path.exists(STATIC_ROOT):
+    os.makedirs(STATIC_ROOT)
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -140,3 +144,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # PRODUCTION
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    DATABASE_URL = os.environ.get('DATABASE_URL')
+    if DATABASE_URL:
+        import dj_database_url
+        db_from_env = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+        DATABASES['default'].update(db_from_env)
+
